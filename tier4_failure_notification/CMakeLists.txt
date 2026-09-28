@@ -12,6 +12,9 @@ ament_auto_add_library(${PROJECT_NAME} SHARED
   src/core/context.cpp
   src/core/expression.cpp
 )
+target_link_libraries(${PROJECT_NAME}
+  yaml-cpp
+)
 
 rclcpp_components_register_node(${PROJECT_NAME}
   PLUGIN "autoware::failure_notification::FailureNotification"
