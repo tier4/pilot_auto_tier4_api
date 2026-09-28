@@ -44,7 +44,7 @@ FailureNotification::FailureNotification(const rclcpp::NodeOptions & options)
 
   // Create publishers for each audience.
   pub_failure_notification_ = create_publisher<FailureNotificationArray>(
-    "/api/external/get/failure_notification", rclcpp::QoS(1).transient_local());
+    "/api/external/get/failure_notification", rclcpp::QoS(1));
 
   using std::placeholders::_1;
   sub_graph_.register_create_callback(std::bind(&FailureNotification::on_create, this, _1));
