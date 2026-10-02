@@ -16,9 +16,11 @@ target_link_libraries(${PROJECT_NAME}
   yaml-cpp
 )
 
-rclcpp_components_register_node(${PROJECT_NAME}
+autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
   PLUGIN "autoware::failure_notification::FailureNotification"
   EXECUTABLE failure_notification_node
+  ROS2_EXECUTOR SingleThreadedExecutor
+  AGNOCAST_EXECUTOR AgnocastOnlyCallbackIsolatedExecutor
 )
 
 install(PROGRAMS

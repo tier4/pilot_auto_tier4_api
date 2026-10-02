@@ -55,9 +55,9 @@ private:
   std::unordered_map<const DiagNode *, Notification *> mapping_;
   std::optional<std::vector<FailureNotificationMsg>> previous_failures_;
 
-  rclcpp::Subscription<Context::RouteState>::SharedPtr sub_route_state_;
-  rclcpp::Subscription<Context::LocalizationState>::SharedPtr sub_localization_state_;
-  rclcpp::Publisher<FailureNotificationArray>::SharedPtr pub_failure_notification_;
+  AUTOWARE_SUBSCRIPTION_PTR(Context::RouteState) sub_route_state_;
+  AUTOWARE_SUBSCRIPTION_PTR(Context::LocalizationState) sub_localization_state_;
+  AUTOWARE_PUBLISHER_PTR(FailureNotificationArray) pub_failure_notification_;
 };
 
 }  // namespace autoware::failure_notification
