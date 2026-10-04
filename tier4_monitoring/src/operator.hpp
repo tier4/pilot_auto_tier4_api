@@ -17,6 +17,7 @@
 
 #include "types.hpp"
 
+#include <autoware/agnocast_wrapper/node.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 #include <tier4_external_api_msgs/msg/monitoring_heartbeat.hpp>
@@ -35,7 +36,7 @@ class Operator
 public:
   static inline double timeout = 1.0;
 
-  Operator(rclcpp::Node & node, const std::string & ns);
+  Operator(autoware::agnocast_wrapper::Node & node, const std::string & ns);
   OperatorStatus mode() const { return mode_; }
   void update(rclcpp::Time now);
   void publish(rclcpp::Time now, bool responsible);
@@ -46,11 +47,11 @@ private:
   using ChangeMonitoringStatus = tier4_external_api_msgs::srv::ChangeMonitoringStatus;
   using ResponseStatus = tier4_external_api_msgs::msg::ResponseStatus;
 
-  rclcpp::Publisher<MonitoringStatus>::SharedPtr pub_status_;
-  rclcpp::Subscription<MonitoringHeartbeat>::SharedPtr sub_heartbeat_;
-  rclcpp::Service<ChangeMonitoringStatus>::SharedPtr srv_change_;
+  AUTOWARE_PUBLISHER_PTR(MonitoringStatus) pub_status_;
+  AUTOWARE_SUBSCRIPTION_PTR(MonitoringHeartbeat) sub_heartbeat_;
+  AUTOWARE_SERVICE_PTR(ChangeMonitoringStatus) srv_change_;
 
-  void on_heartbeat(const MonitoringHeartbeat::SharedPtr msg);
+  void on_heartbeat(const MonitoringHeartbeat::ConstSharedPtr msg);
   void on_change(
     const ChangeMonitoringStatus::Request::SharedPtr req,
     const ChangeMonitoringStatus::Response::SharedPtr res);
@@ -63,7 +64,7 @@ class OperatorGroup
 {
 public:
   explicit OperatorGroup(const std::string & ns);
-  void create(rclcpp::Node & node, const std::string & name);
+  void create(autoware::agnocast_wrapper::Node & node, const std::string & name);
   void update(rclcpp::Time now);
   void publish(rclcpp::Time now);
   bool has_responsible() const;

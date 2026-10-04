@@ -29,7 +29,7 @@
 namespace tier4_monitoring
 {
 
-Lanelet::Lanelet(rclcpp::Node & node) : logger_(node.get_logger())
+Lanelet::Lanelet(autoware::agnocast_wrapper::Node & node) : logger_(node.get_logger())
 {
   using std::placeholders::_1;
 
