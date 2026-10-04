@@ -5,8 +5,8 @@
   <!-- Set `ld_preload_value`. This env launch is needed regardless if we use agnocast or not -->
   <include file="$(find-pkg-share autoware_agnocast_wrapper)/launch/agnocast_env.launch.py"/>
 
-  <!-- Component Container -->
-  <group>
+  <!-- Component Container; with ENABLE_AGNOCAST=1 every node of this file runs as a process of its own -->
+  <group unless="$(var use_agnocast)">
     <push-ros-namespace namespace="tier4_api"/>
     <node_container pkg="rclcpp_components" exec="component_container_mt" name="api_extension_container" namespace="" ros_args="--log-level tier4_api.api_extension_container:=warn"/>
   </group>
@@ -62,18 +62,34 @@
   <group>
     <push-ros-namespace namespace="tier4_api"/>
     <include file="$(find-pkg-share tier4_autoware_api_extension)/launch/namespace.launch.py"/>
-    <load_composable_node target="$(var current_ros_namespace)/api_extension_container">
-      <composable_node pkg="topic_tools" plugin="topic_tools::RelayNode" name="relay_virtual_traffic_light_status">
-        <param name="input_topic" value="/api/external/set/virtual_traffic_light/states"/>
-        <param name="output_topic" value="/perception/virtual_traffic_light_states"/>
-        <param name="type" value="tier4_v2x_msgs/msg/VirtualTrafficLightStateArray"/>
-      </composable_node>
-      <composable_node pkg="topic_tools" plugin="topic_tools::RelayNode" name="relay_virtual_traffic_light_commands">
-        <param name="input_topic" value="/planning/scenario_planning/status/infrastructure_commands"/>
-        <param name="output_topic" value="/api/external/get/virtual_traffic_light/commands"/>
-        <param name="type" value="tier4_v2x_msgs/msg/InfrastructureCommandArray"/>
-      </composable_node>
-    </load_composable_node>
+    <autoware_node
+      pkg="autoware_topic_relay_controller"
+      exec="autoware_topic_relay_controller_node"
+      name="relay_virtual_traffic_light_status"
+      target="$(var current_ros_namespace)/api_extension_container"
+      output="screen"
+    >
+      <param name="topic" value="/api/external/set/virtual_traffic_light/states"/>
+      <param name="remap_topic" value="/perception/virtual_traffic_light_states"/>
+      <param name="topic_type" value="tier4_v2x_msgs/msg/VirtualTrafficLightStateArray"/>
+      <param name="qos_depth" value="10"/>
+      <param name="enable_relay_control" value="false"/>
+      <param name="enable_keep_publishing" value="false"/>
+    </autoware_node>
+    <autoware_node
+      pkg="autoware_topic_relay_controller"
+      exec="autoware_topic_relay_controller_node"
+      name="relay_virtual_traffic_light_commands"
+      target="$(var current_ros_namespace)/api_extension_container"
+      output="screen"
+    >
+      <param name="topic" value="/planning/scenario_planning/status/infrastructure_commands"/>
+      <param name="remap_topic" value="/api/external/get/virtual_traffic_light/commands"/>
+      <param name="topic_type" value="tier4_v2x_msgs/msg/InfrastructureCommandArray"/>
+      <param name="qos_depth" value="10"/>
+      <param name="enable_relay_control" value="false"/>
+      <param name="enable_keep_publishing" value="false"/>
+    </autoware_node>
   </group>
 
   <!-- For route distance. -->
