@@ -31,7 +31,6 @@ ament_auto_add_library(${PROJECT_NAME} SHARED
 rclcpp_components_register_nodes(${PROJECT_NAME}
   "external_api::Diagnostics"
   "external_api::Door"
-  "external_api::Emergency"
   "external_api::Engage"
   "external_api::FailSafeState"
   "external_api::InitialPose"
@@ -46,6 +45,13 @@ rclcpp_components_register_nodes(${PROJECT_NAME}
 autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
   PLUGIN "external_api::CalibrationStatus"
   EXECUTABLE calibration_status_node
+  ROS2_EXECUTOR MultiThreadedExecutor
+  AGNOCAST_EXECUTOR AgnocastOnlyCallbackIsolatedExecutor
+)
+
+autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
+  PLUGIN "external_api::Emergency"
+  EXECUTABLE emergency_node
   ROS2_EXECUTOR MultiThreadedExecutor
   AGNOCAST_EXECUTOR AgnocastOnlyCallbackIsolatedExecutor
 )

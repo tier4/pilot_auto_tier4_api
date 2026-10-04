@@ -33,6 +33,7 @@ from launch_ros.substitutions import FindPackageShare
 AGNOCAST_WRAPPER_NODES = [
     ("calibration_status", "CalibrationStatus", "calibration_status_node"),
     ("cpu_usage", "CpuUsage", "cpu_usage_node"),
+    ("emergency", "Emergency", "emergency_node"),
     ("localization_score", "LocalizationScore", "localization_score_node"),
     ("map", "Map", "map_node"),
     ("metadata_packages", "MetadataPackages", "metadata_packages_node"),
@@ -95,6 +96,7 @@ def _get_agnocast_env():
 
 def launch_setup(context, *args, **kwargs):
     use_agnocast = context.perform_substitution(LaunchConfiguration("use_agnocast")) == "1"
+    launch_api_0_4_3 = IfCondition(LaunchConfiguration("launch_api_0_4_3")).evaluate(context)
 
     # RTCController is launched by tier4_autoware_api_launch because it is used by autoware_universe.
     components = []
@@ -132,13 +134,11 @@ def launch_setup(context, *args, **kwargs):
             _create_api_node("velocity", "Velocity"),
         ],
     )
-    loader_0_4_4 = LoadComposableNodes(
-        target_container=Namespace("/", "external/autoware_iv_adaptor"),
-        composable_node_descriptions=[
-            _create_api_node("emergency", "Emergency"),
-        ],
-    )
-    return [container, loader_0_4_3, loader_0_4_4, *nodes]
+    # Under ENABLE_AGNOCAST=1 every node that is always launched runs as its own process, so the
+    # container is needed only for the nodes of launch_api_0_4_3.
+    if use_agnocast and not launch_api_0_4_3:
+        return nodes
+    return [container, loader_0_4_3, *nodes]
 
 
 def generate_launch_description():

@@ -23,7 +23,7 @@ Emergency::Emergency(const rclcpp::NodeOptions & options) : Node("external_api_e
 {
   using std::placeholders::_1;
   using std::placeholders::_2;
-  tier4_api_utils::ServiceProxyNodeInterface proxy(this);
+  tier4_api_utils::ServiceProxyNodeInterface<NodeT> proxy(this);
 
   group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
   srv_ = proxy.create_service<tier4_external_api_msgs::srv::SetEmergency>(
@@ -49,7 +49,7 @@ void Emergency::setEmergency(
   response->status = resp->status;
 }
 
-void Emergency::getEmergency(const tier4_external_api_msgs::msg::Emergency::SharedPtr message)
+void Emergency::getEmergency(const tier4_external_api_msgs::msg::Emergency::ConstSharedPtr message)
 {
   pub_emergency_->publish(*message);
 }

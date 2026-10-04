@@ -18,30 +18,34 @@
 #include "rclcpp/rclcpp.hpp"
 #include "tier4_api_utils/tier4_api_utils.hpp"
 
+#include <autoware/agnocast_wrapper/node.hpp>
+
 #include "tier4_external_api_msgs/msg/emergency.hpp"
 #include "tier4_external_api_msgs/srv/set_emergency.hpp"
 
 namespace external_api
 {
 
-class Emergency : public rclcpp::Node
+class Emergency : public autoware::agnocast_wrapper::Node
 {
 public:
   explicit Emergency(const rclcpp::NodeOptions & options);
 
 private:
+  using NodeT = autoware::agnocast_wrapper::Node;
+
   // ros interface
   rclcpp::CallbackGroup::SharedPtr group_;
-  tier4_api_utils::Service<tier4_external_api_msgs::srv::SetEmergency>::SharedPtr srv_;
-  tier4_api_utils::Client<tier4_external_api_msgs::srv::SetEmergency>::SharedPtr cli_;
-  rclcpp::Publisher<tier4_external_api_msgs::msg::Emergency>::SharedPtr pub_emergency_;
-  rclcpp::Subscription<tier4_external_api_msgs::msg::Emergency>::SharedPtr sub_emergency_;
+  tier4_api_utils::Service<tier4_external_api_msgs::srv::SetEmergency, NodeT>::SharedPtr srv_;
+  tier4_api_utils::Client<tier4_external_api_msgs::srv::SetEmergency, NodeT>::SharedPtr cli_;
+  AUTOWARE_PUBLISHER_PTR(tier4_external_api_msgs::msg::Emergency) pub_emergency_;
+  AUTOWARE_SUBSCRIPTION_PTR(tier4_external_api_msgs::msg::Emergency) sub_emergency_;
 
   // ros callback
   void setEmergency(
     const tier4_external_api_msgs::srv::SetEmergency::Request::SharedPtr request,
     const tier4_external_api_msgs::srv::SetEmergency::Response::SharedPtr response);
-  void getEmergency(const tier4_external_api_msgs::msg::Emergency::SharedPtr message);
+  void getEmergency(const tier4_external_api_msgs::msg::Emergency::ConstSharedPtr message);
 };
 
 }  // namespace external_api
