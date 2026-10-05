@@ -82,7 +82,8 @@
     <include file="$(find-pkg-share tier4_autoware_api_extension)/launch/namespace.launch.py"/>
     <load_composable_node target="$(var current_ros_namespace)/api_extension_container">
       <composable_node pkg="autoware_path_distance_calculator" plugin="autoware::path_distance_calculator::PathDistanceCalculator" name="path_distance_calculator" namespace="utils">
-        <remap from="~/input/path" to="/planning/scenario_planning/lane_driving/behavior_planning/path"/>
+        <remap from="~/input/route" to="/planning/mission_planning/route"/>
+        <remap from="~/input/map" to="/map/vector_map"/>
         <remap from="~/output/distance" to="~/distance"/>
       </composable_node>
     </load_composable_node>
@@ -91,7 +92,8 @@
   <group if="$(var use_agnocast)">
     <push-ros-namespace namespace="tier4_api"/>
     <node pkg="autoware_path_distance_calculator" exec="autoware_path_distance_calculator_node" name="path_distance_calculator" namespace="utils" output="screen">
-      <remap from="~/input/path" to="/planning/scenario_planning/lane_driving/behavior_planning/path"/>
+      <remap from="~/input/route" to="/planning/mission_planning/route"/>
+      <remap from="~/input/map" to="/map/vector_map"/>
       <remap from="~/output/distance" to="~/distance"/>
       <env name="LD_PRELOAD" value="$(var ld_preload_value)"/>
     </node>
