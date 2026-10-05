@@ -11,5 +11,4 @@
 
 ## Requirement
 
-- グローバルオーバーヘッドライトの ON/OFF を実施すること。
-- `enabled` が true のとき ON、false のとき OFF とすること。
+室内灯の制御を実施すること。
