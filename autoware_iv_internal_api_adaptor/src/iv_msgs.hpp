@@ -15,6 +15,7 @@
 #ifndef IV_MSGS_HPP_
 #define IV_MSGS_HPP_
 
+#include <autoware/agnocast_wrapper/node.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 #include <autoware_adapi_v1_msgs/msg/mrm_state.hpp>
@@ -28,7 +29,7 @@
 
 namespace internal_api
 {
-class IVMsgs : public rclcpp::Node
+class IVMsgs : public autoware::agnocast_wrapper::Node
 {
 public:
   explicit IVMsgs(const rclcpp::NodeOptions & options);
@@ -37,19 +38,19 @@ private:
   using EmergencyStateInput = autoware_adapi_v1_msgs::msg::MrmState;
   using AutowareStateInput = autoware_system_msgs::msg::AutowareState;
   using AutowareStateOutput = tier4_system_msgs::msg::AutowareState;
-  rclcpp::Subscription<EmergencyStateInput>::SharedPtr sub_emergency_;
-  rclcpp::Subscription<AutowareStateInput>::SharedPtr sub_state_;
-  rclcpp::Publisher<AutowareStateOutput>::SharedPtr pub_state_;
+  AUTOWARE_SUBSCRIPTION_PTR(EmergencyStateInput) sub_emergency_;
+  AUTOWARE_SUBSCRIPTION_PTR(AutowareStateInput) sub_state_;
+  AUTOWARE_PUBLISHER_PTR(AutowareStateOutput) pub_state_;
 
   using TrajectoryInput = autoware_planning_msgs::msg::Trajectory;
   using TrajectoryOutput = tier4_planning_msgs::msg::Trajectory;
-  rclcpp::Subscription<TrajectoryInput>::SharedPtr sub_trajectory_;
-  rclcpp::Publisher<TrajectoryOutput>::SharedPtr pub_trajectory_;
+  AUTOWARE_SUBSCRIPTION_PTR(TrajectoryInput) sub_trajectory_;
+  AUTOWARE_PUBLISHER_PTR(TrajectoryOutput) pub_trajectory_;
 
   using TrackedObjectsInput = autoware_perception_msgs::msg::TrackedObjects;
   using DynamicObjectsOutput = tier4_perception_msgs::msg::DynamicObjectArray;
-  rclcpp::Subscription<TrackedObjectsInput>::SharedPtr sub_tracked_objects_;
-  rclcpp::Publisher<DynamicObjectsOutput>::SharedPtr pub_dynamic_objects_;
+  AUTOWARE_SUBSCRIPTION_PTR(TrackedObjectsInput) sub_tracked_objects_;
+  AUTOWARE_PUBLISHER_PTR(DynamicObjectsOutput) pub_dynamic_objects_;
 
   void onState(const AutowareStateInput::ConstSharedPtr message);
   void onEmergency(const EmergencyStateInput::ConstSharedPtr message);
