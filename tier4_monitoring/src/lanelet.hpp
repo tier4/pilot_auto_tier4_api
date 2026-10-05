@@ -15,6 +15,7 @@
 #ifndef LANELET_HPP_
 #define LANELET_HPP_
 
+#include <autoware/agnocast_wrapper/node.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 #include <autoware_adapi_v1_msgs/msg/route.hpp>
@@ -33,7 +34,7 @@ namespace tier4_monitoring
 class Lanelet
 {
 public:
-  explicit Lanelet(rclcpp::Node & node);
+  explicit Lanelet(autoware::agnocast_wrapper::Node & node);
   bool is_level2_available() const { return true; }
   bool is_level4_available() const { return is_level4_available_; }
 
@@ -43,8 +44,8 @@ private:
   using RouteData = autoware_adapi_v1_msgs::msg::RouteData;
 
   rclcpp::Logger logger_;
-  rclcpp::Subscription<LaneletMapBin>::SharedPtr sub_map_;
-  rclcpp::Subscription<Route>::SharedPtr sub_route_;
+  AUTOWARE_SUBSCRIPTION_PTR(LaneletMapBin) sub_map_;
+  AUTOWARE_SUBSCRIPTION_PTR(Route) sub_route_;
 
   void on_map(const LaneletMapBin & msg);
   void on_route(const Route & msg);

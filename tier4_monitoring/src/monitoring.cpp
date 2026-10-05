@@ -38,7 +38,8 @@ Monitoring::Monitoring(const rclcpp::NodeOptions & options)
   }
 
   const auto period = rclcpp::Rate(10.0).period();
-  timer_ = rclcpp::create_timer(this, get_clock(), period, [this]() { on_timer(); });
+  timer_ =
+    autoware::agnocast_wrapper::create_timer(this, get_clock(), period, [this]() { on_timer(); });
 }
 
 void Monitoring::on_timer()

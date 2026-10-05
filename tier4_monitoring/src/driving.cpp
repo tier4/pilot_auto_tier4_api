@@ -19,7 +19,7 @@
 namespace tier4_monitoring
 {
 
-Driving::Driving(rclcpp::Node & node)
+Driving::Driving(autoware::agnocast_wrapper::Node & node)
 {
   sub_operation_mode_ = node.create_subscription<OperationModeState>(
     "/api/operation_mode/state", rclcpp::QoS(1).transient_local(),

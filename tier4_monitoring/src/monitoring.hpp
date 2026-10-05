@@ -19,6 +19,7 @@
 #include "lanelet.hpp"
 #include "operator.hpp"
 
+#include <autoware/agnocast_wrapper/node.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 #include <memory>
@@ -27,7 +28,7 @@
 namespace tier4_monitoring
 {
 
-class Monitoring : public rclcpp::Node
+class Monitoring : public autoware::agnocast_wrapper::Node
 {
 public:
   explicit Monitoring(const rclcpp::NodeOptions & options);
@@ -35,7 +36,7 @@ public:
 private:
   void on_timer();
 
-  rclcpp::TimerBase::SharedPtr timer_;
+  AUTOWARE_TIMER_PTR timer_;
   Driving driving_;
   Lanelet lanelet_;
   OperatorGroup supervisors_;

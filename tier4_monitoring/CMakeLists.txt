@@ -12,9 +12,11 @@ ament_auto_add_library(${PROJECT_NAME} SHARED
   src/operator.cpp
 )
 
-rclcpp_components_register_node(${PROJECT_NAME}
+autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
   PLUGIN "tier4_monitoring::Monitoring"
   EXECUTABLE monitoring_node
+  ROS2_EXECUTOR SingleThreadedExecutor
+  AGNOCAST_EXECUTOR AgnocastOnlyCallbackIsolatedExecutor
 )
 
 install(PROGRAMS

@@ -81,7 +81,7 @@ bool MonitoringTest::spin_until(
   const auto end = std::chrono::steady_clock::now() + timeout;
   while (std::chrono::steady_clock::now() < end) {
     if (heartbeat_enabled_) mock_->heartbeat();
-    rclcpp::spin_some(node_);
+    rclcpp::spin_some(node_->get_node_base_interface());
     rclcpp::spin_some(mock_);
     if (condition()) return true;
     std::this_thread::sleep_for(10ms);

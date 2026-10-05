@@ -21,7 +21,7 @@
 namespace tier4_monitoring
 {
 
-Operator::Operator(rclcpp::Node & node, const std::string & ns)
+Operator::Operator(autoware::agnocast_wrapper::Node & node, const std::string & ns)
 {
   using std::placeholders::_1;
   using std::placeholders::_2;
@@ -59,7 +59,7 @@ void Operator::publish(rclcpp::Time now, bool responsible)
   pub_status_->publish(msg);
 }
 
-void Operator::on_heartbeat(const MonitoringHeartbeat::SharedPtr msg)
+void Operator::on_heartbeat(const MonitoringHeartbeat::ConstSharedPtr msg)
 {
   stamp_ = msg->stamp;
 }
@@ -83,7 +83,7 @@ OperatorGroup::OperatorGroup(const std::string & ns) : ns_(ns)
   responsible_ = nullptr;
 }
 
-void OperatorGroup::create(rclcpp::Node & node, const std::string & name)
+void OperatorGroup::create(autoware::agnocast_wrapper::Node & node, const std::string & name)
 {
   operators_.push_back(std::make_unique<Operator>(node, ns_ + "/" + name));
 }

@@ -17,6 +17,7 @@
 
 #include "types.hpp"
 
+#include <autoware/agnocast_wrapper/node.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 #include <autoware_adapi_v1_msgs/msg/operation_mode_state.hpp>
@@ -41,7 +42,7 @@ struct LevelAvailable
 class Driving
 {
 public:
-  explicit Driving(rclcpp::Node & node);
+  explicit Driving(autoware::agnocast_wrapper::Node & node);
   void update_level2_available(bool route, bool operators);
   void update_level4_available(bool route, bool operators);
   void update(const rclcpp::Time & now);
@@ -56,13 +57,13 @@ private:
   using VelocityLimitSet = autoware_internal_planning_msgs::msg::VelocityLimit;
   using VelocityLimitClear = autoware_internal_planning_msgs::msg::VelocityLimitClearCommand;
 
-  rclcpp::Subscription<OperationModeState>::SharedPtr sub_operation_mode_;
-  rclcpp::Client<ChangeOperationMode>::SharedPtr cli_change_stop_mode;
-  rclcpp::Client<ChangeOperationMode>::SharedPtr cli_change_autonomous_mode;
-  rclcpp::Publisher<DrivingStatus>::SharedPtr pub_status_;
-  rclcpp::Service<EnableDriving>::SharedPtr srv_enable_;
-  rclcpp::Publisher<VelocityLimitSet>::SharedPtr pub_velocity_limit_set_;
-  rclcpp::Publisher<VelocityLimitClear>::SharedPtr pub_velocity_limit_clear_;
+  AUTOWARE_SUBSCRIPTION_PTR(OperationModeState) sub_operation_mode_;
+  AUTOWARE_CLIENT_PTR(ChangeOperationMode) cli_change_stop_mode;
+  AUTOWARE_CLIENT_PTR(ChangeOperationMode) cli_change_autonomous_mode;
+  AUTOWARE_PUBLISHER_PTR(DrivingStatus) pub_status_;
+  AUTOWARE_SERVICE_PTR(EnableDriving) srv_enable_;
+  AUTOWARE_PUBLISHER_PTR(VelocityLimitSet) pub_velocity_limit_set_;
+  AUTOWARE_PUBLISHER_PTR(VelocityLimitClear) pub_velocity_limit_clear_;
 
   void on_operation_mode(const OperationModeState & msg);
   void on_enable(
