@@ -1,9 +1,25 @@
 <launch>
   <arg name="launch_api_0_4_3" default="false" description="Launch APIs with an EOL of v0.4.3."/>
 
+  <let name="use_agnocast" value="$(env ENABLE_AGNOCAST 0)"/>
+
   <group>
     <push-ros-namespace namespace="tier4_api"/>
-    <node_container pkg="rclcpp_components" exec="component_container_mt" name="deprecated_api_container" namespace="" ros_args="--log-level tier4_api.deprecated_api_container:=warn"/>
+    <!-- With ENABLE_AGNOCAST=1 the nodes loaded by autoware_node run as processes of their own,
+         so the container is left only with the APIs with an EOL of v0.4.3. -->
+    <group unless="$(var use_agnocast)">
+      <node_container pkg="rclcpp_components" exec="component_container_mt" name="deprecated_api_container" namespace="" ros_args="--log-level tier4_api.deprecated_api_container:=warn"/>
+    </group>
+    <group if="$(var use_agnocast)">
+      <node_container
+        pkg="rclcpp_components"
+        exec="component_container_mt"
+        name="deprecated_api_container"
+        namespace=""
+        ros_args="--log-level tier4_api.deprecated_api_container:=warn"
+        if="$(var launch_api_0_4_3)"
+      />
+    </group>
     <include file="$(find-pkg-share tier4_deprecated_api_adapter)/launch/namespace.launch.py"/>
 
     <load_composable_node target="$(var current_ros_namespace)/deprecated_api_container" if="$(var launch_api_0_4_3)">
@@ -17,22 +33,32 @@
       </composable_node>
     </load_composable_node>
 
-    <load_composable_node target="$(var current_ros_namespace)/deprecated_api_container">
-      <composable_node pkg="topic_tools" plugin="topic_tools::RelayNode" name="relay_route_distance">
-        <param name="input_topic" value="/tier4_api/utils/path_distance_calculator/distance"/>
-        <param name="output_topic" value="/autoware_api/utils/path_distance_calculator/distance"/>
-        <param name="type" value="autoware_internal_debug_msgs/msg/Float64Stamped"/>
-      </composable_node>
-    </load_composable_node>
+    <autoware_node
+      pkg="autoware_topic_relay_controller"
+      exec="autoware_topic_relay_controller_node"
+      name="relay_route_distance"
+      target="$(var current_ros_namespace)/deprecated_api_container"
+      output="screen"
+    >
+      <param name="topic" value="/tier4_api/utils/path_distance_calculator/distance"/>
+      <param name="remap_topic" value="/autoware_api/utils/path_distance_calculator/distance"/>
+      <param name="topic_type" value="autoware_internal_debug_msgs/msg/Float64Stamped"/>
+      <param name="qos_depth" value="10"/>
+      <param name="enable_relay_control" value="false"/>
+      <param name="enable_keep_publishing" value="false"/>
+    </autoware_node>
 
     <!-- For the initial pose API, use the autoware_iv_external_api_adaptor before v0.4.4. -->
-    <load_composable_node target="$(var current_ros_namespace)/deprecated_api_container" unless="$(var launch_api_0_4_3)">
-      <composable_node pkg="tier4_deprecated_api_adapter" plugin="tier4_deprecated_api_adapter::InitialPose" name="initial_pose"/>
-    </load_composable_node>
+    <autoware_node
+      pkg="tier4_deprecated_api_adapter"
+      exec="initial_pose_node"
+      name="initial_pose"
+      target="$(var current_ros_namespace)/deprecated_api_container"
+      output="screen"
+      unless="$(var launch_api_0_4_3)"
+    />
 
     <!-- 2026/09 EOL API -->
-    <load_composable_node target="$(var current_ros_namespace)/deprecated_api_container">
-      <composable_node pkg="tier4_deprecated_api_adapter" plugin="tier4_deprecated_api_adapter::HazardStatus" name="hazard_status"/>
-    </load_composable_node>
+    <autoware_node pkg="tier4_deprecated_api_adapter" exec="hazard_status_node" name="hazard_status" target="$(var current_ros_namespace)/deprecated_api_container" output="screen"/>
   </group>
 </launch>
