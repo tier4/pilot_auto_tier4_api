@@ -12,8 +12,8 @@
 ## Requirement
 
 - `/vehicle/air_condition/command` へ同じ型のまま転送し、その応答を返すこと。
-- 摂氏は `unit=1`、華氏は `unit=2` とし、温度は文字列で指定すること。
-- `"LO"` は最大冷房、`"HI"` は最大暖房とし、この2つでは `unit` を使わないこと。
+- `temperature_mode=TEMPERATURE_CELSIUS` は 18.0 から 32.0 まで 0.5 刻み、`TEMPERATURE_FAHRENHEIT` は 60 から 85 の整数とすること。
+- `TEMPERATURE_LO` は最大冷房、`TEMPERATURE_HI` は最大暖房とし、この2つでは `temperature` を使わないこと。
 - `enabled=true` を Auto ON、`false` を Auto OFF とし、設定温度と同時に更新すること。
 - 車両が受理できない温度は、Auto を含めて反映せず失敗を返すこと。
 - 成功は車両インターフェースが command を受理したことを表す。実車への反映は `/api/external/get/air_condition` で確認すること。
