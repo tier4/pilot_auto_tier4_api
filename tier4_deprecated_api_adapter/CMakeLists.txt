@@ -12,9 +12,18 @@ ament_auto_add_library(${PROJECT_NAME} SHARED
   src/manual_status.cpp
 )
 
-rclcpp_components_register_nodes(${PROJECT_NAME}
-  "tier4_deprecated_api_adapter::HazardStatus"
-  "tier4_deprecated_api_adapter::InitialPose"
+autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
+  PLUGIN "tier4_deprecated_api_adapter::HazardStatus"
+  EXECUTABLE hazard_status_node
+  ROS2_EXECUTOR SingleThreadedExecutor
+  AGNOCAST_EXECUTOR AgnocastOnlyCallbackIsolatedExecutor
+)
+
+autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
+  PLUGIN "tier4_deprecated_api_adapter::InitialPose"
+  EXECUTABLE initial_pose_node
+  ROS2_EXECUTOR MultiThreadedExecutor
+  AGNOCAST_EXECUTOR AgnocastOnlyCallbackIsolatedExecutor
 )
 
 rclcpp_components_register_node(${PROJECT_NAME}

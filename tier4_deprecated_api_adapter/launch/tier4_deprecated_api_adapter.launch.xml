@@ -26,13 +26,16 @@
     </load_composable_node>
 
     <!-- For the initial pose API, use the autoware_iv_external_api_adaptor before v0.4.4. -->
-    <load_composable_node target="$(var current_ros_namespace)/deprecated_api_container" unless="$(var launch_api_0_4_3)">
-      <composable_node pkg="tier4_deprecated_api_adapter" plugin="tier4_deprecated_api_adapter::InitialPose" name="initial_pose"/>
-    </load_composable_node>
+    <autoware_node
+      pkg="tier4_deprecated_api_adapter"
+      exec="initial_pose_node"
+      name="initial_pose"
+      target="$(var current_ros_namespace)/deprecated_api_container"
+      output="screen"
+      unless="$(var launch_api_0_4_3)"
+    />
 
     <!-- 2026/09 EOL API -->
-    <load_composable_node target="$(var current_ros_namespace)/deprecated_api_container">
-      <composable_node pkg="tier4_deprecated_api_adapter" plugin="tier4_deprecated_api_adapter::HazardStatus" name="hazard_status"/>
-    </load_composable_node>
+    <autoware_node pkg="tier4_deprecated_api_adapter" exec="hazard_status_node" name="hazard_status" target="$(var current_ros_namespace)/deprecated_api_container" output="screen"/>
   </group>
 </launch>
