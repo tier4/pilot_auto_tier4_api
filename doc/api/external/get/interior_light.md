@@ -11,5 +11,4 @@
 
 ## Requirement
 
-- グローバルオーバーヘッドライトの ON/OFF が取得できること。
-- `enabled` が true のとき ON、false のとき OFF であること。
+- 室内灯の状態が取得できること。
