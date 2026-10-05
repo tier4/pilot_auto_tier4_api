@@ -7,13 +7,11 @@
 
 ## Description
 
-接続中の車両の設定温度と HVAC (1st Row) Auto の ON/OFF を同時に更新する。車両固有の要求値への変換は車両インターフェースが行う。
+エアコンの制御を実施する
 
 ## Requirement
 
-- `/vehicle/air_condition/command` へ同じ型のまま転送し、その応答を返すこと。
+- エアコンの制御を実施すること。
 - `temperature_mode=TEMPERATURE_CELSIUS` は 18.0 から 32.0 まで 0.5 刻み、`TEMPERATURE_FAHRENHEIT` は 60 から 85 の整数とすること。
 - `TEMPERATURE_LO` は最大冷房、`TEMPERATURE_HI` は最大暖房とし、この2つでは `temperature` を使わないこと。
-- `enabled=true` を Auto ON、`false` を Auto OFF とし、設定温度と同時に更新すること。
-- 車両が受理できない温度は、Auto を含めて反映せず失敗を返すこと。
-- 成功は車両インターフェースが command を受理したことを表す。実車への反映は `/api/external/get/air_condition` で確認すること。
+- 指示値を車両側で受理できない場合は失敗を返すこと。
