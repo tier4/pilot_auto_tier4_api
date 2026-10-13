@@ -3,7 +3,7 @@
 ## Classification
 
 - Behavior: Service
-- DataType: tier4_external_api_msgs/srv/SetInteriorLight
+- DataType: tier4_external_api_msgs/srv/SetSwitch
 
 ## Description
 

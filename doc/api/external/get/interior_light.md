@@ -3,7 +3,7 @@
 ## Classification
 
 - Behavior: Topic
-- DataType: tier4_external_api_msgs/msg/InteriorLightStatus
+- DataType: tier4_external_api_msgs/msg/SwitchStatus
 
 ## Description
 

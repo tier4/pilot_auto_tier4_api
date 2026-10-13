@@ -18,8 +18,8 @@
 #include <rclcpp/rclcpp.hpp>
 #include <tier4_api_utils/tier4_api_utils.hpp>
 
-#include <tier4_external_api_msgs/msg/interior_light_status.hpp>
-#include <tier4_external_api_msgs/srv/set_interior_light.hpp>
+#include <tier4_external_api_msgs/msg/switch_status.hpp>
+#include <tier4_external_api_msgs/srv/set_switch.hpp>
 
 namespace tier4_autoware_api_extension
 {
@@ -30,8 +30,8 @@ public:
   explicit InteriorLight(const rclcpp::NodeOptions & options);
 
 private:
-  using SetService = tier4_external_api_msgs::srv::SetInteriorLight;
-  using StatusMessage = tier4_external_api_msgs::msg::InteriorLightStatus;
+  using SetService = tier4_external_api_msgs::srv::SetSwitch;
+  using StatusMessage = tier4_external_api_msgs::msg::SwitchStatus;
 
   rclcpp::CallbackGroup::SharedPtr group_;
   tier4_api_utils::Service<SetService>::SharedPtr srv_set_;
