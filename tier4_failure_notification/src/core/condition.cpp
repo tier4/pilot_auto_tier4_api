@@ -131,6 +131,7 @@ RouteStateCondition::RouteStateCondition(const Expression & expr)
     if (str == "Unset") return RouteState::UNSET;
     if (str == "Set") return RouteState::SET;
     if (str == "Arrived") return RouteState::ARRIVED;
+    if (str == "Changing") return RouteState::CHANGING;
     throw std::runtime_error("Invalid RouteState: " + str);
   };
 
