@@ -150,7 +150,10 @@ void Driving::set_velocity_limit(const rclcpp::Time & now)
   VelocityLimitSet msg;
   msg.stamp = now;
   msg.max_velocity = 0;
-  msg.use_constraints = false;
+  msg.use_constraints = true;
+  msg.constraints.min_acceleration = -1.0;
+  msg.constraints.max_jerk = 0.6;
+  msg.constraints.min_jerk = -0.6;
   msg.sender = "monitoring_api";
   pub_velocity_limit_set_->publish(msg);
 }
