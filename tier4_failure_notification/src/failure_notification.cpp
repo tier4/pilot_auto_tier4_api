@@ -29,6 +29,7 @@ FailureNotification::FailureNotification(const rclcpp::NodeOptions & options)
   const auto path = declare_parameter<std::string>("error_file");
   notifications_ = std::make_unique<Notifications>(YAML::LoadFile(path));
   publish_interval_ = declare_parameter<double>("interval");
+  timeout_ = declare_parameter<double>("timeout");
 
   // Create context and related interfaces.
   context_.route_state.stamp = now();
@@ -68,6 +69,10 @@ void FailureNotification::reset_publish_interval()
   const auto period = rclcpp::Duration::from_seconds(publish_interval_);
   timer_.reset();
   timer_ = autoware::agnocast_wrapper::create_timer(this, get_clock(), period, [this]() {
+    if (timeout_ < (now() - last_stamp_).seconds()) {
+      timer_.reset();
+      previous_failures_ = std::nullopt;  // To publish when the graph is updated again.
+    }
     if (previous_failures_) {
       FailureNotificationArray msg;
       msg.stamp = now();
@@ -79,6 +84,8 @@ void FailureNotification::reset_publish_interval()
 
 void FailureNotification::on_update(DiagGraph::ConstSharedPtr graph)
 {
+  last_stamp_ = now();
+
   for (const auto & node : graph->nodes()) {
     const auto notification = mapping_.at(node);
     if (notification) {
@@ -104,7 +111,7 @@ void FailureNotification::on_update(DiagGraph::ConstSharedPtr graph)
   previous_failures_ = failures;
 
   FailureNotificationArray msg;
-  msg.stamp = now();
+  msg.stamp = graph->updated_stamp();
   msg.notifications = failures;
   pub_failure_notification_->publish(msg);
 

@@ -50,6 +50,9 @@ private:
   double publish_interval_;
   void reset_publish_interval();
 
+  double timeout_;
+  rclcpp::Time last_stamp_;
+
   Context context_;
   std::unique_ptr<Notifications> notifications_;
   std::unordered_map<const DiagNode *, Notification *> mapping_;
