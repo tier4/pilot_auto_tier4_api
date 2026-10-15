@@ -186,7 +186,10 @@ void DrivingTest::wait_velocity_limit_set()
 
   const auto & msg = planning->velocity_limit_set().value();
   EXPECT_EQ(msg.max_velocity, 0.0);
-  EXPECT_FALSE(msg.use_constraints);
+  EXPECT_TRUE(msg.use_constraints);
+  EXPECT_FLOAT_EQ(msg.constraints.min_acceleration, -1.0);
+  EXPECT_FLOAT_EQ(msg.constraints.max_jerk, 0.6);
+  EXPECT_FLOAT_EQ(msg.constraints.min_jerk, -0.6);
   EXPECT_EQ(msg.sender, "monitoring_api");
   EXPECT_FALSE(planning->velocity_limit_clear().has_value());
 }
