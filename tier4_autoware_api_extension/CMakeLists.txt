@@ -6,6 +6,7 @@ autoware_package()
 
 ament_auto_add_library(${PROJECT_NAME} SHARED
   src/air_condition.cpp
+  src/interior_light.cpp
   src/route_distance.cpp
   src/traffic_light.cpp
   src/planning_factor.cpp
@@ -15,6 +16,12 @@ ament_auto_add_library(${PROJECT_NAME} SHARED
 rclcpp_components_register_node(${PROJECT_NAME}
   PLUGIN "tier4_autoware_api_extension::AirCondition"
   EXECUTABLE air_condition_node
+  EXECUTOR MultiThreadedExecutor
+)
+
+rclcpp_components_register_node(${PROJECT_NAME}
+  PLUGIN "tier4_autoware_api_extension::InteriorLight"
+  EXECUTABLE interior_light_node
   EXECUTOR MultiThreadedExecutor
 )
 
