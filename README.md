@@ -53,6 +53,8 @@ If the version is `v0.4.0`, it means version v0.4.0 or earlier.
 | v0.4.5  | service | [/api/external/set/monitoring/advisor/remote/change](./tier4_monitoring/doc/api/advisor-change.md)             | tier4_external_api_msgs/srv/ChangeMonitoringStatus                                                                                                                                              |
 | T.B.D.  | service | [/api/external/set/air_condition](./doc/api/external/set/air_condition.md)                                     | [tier4_external_api_msgs/srv/SetAirCondition](https://github.com/tier4/tier4_autoware_msgs/blob/tier4/universe/tier4_external_api_msgs/srv/SetAirCondition.srv)                                 |
 | T.B.D.  | topic   | [/api/external/get/air_condition](./doc/api/external/get/air_condition.md)                                     | [tier4_external_api_msgs/msg/AirConditionStatus](https://github.com/tier4/tier4_autoware_msgs/blob/tier4/universe/tier4_external_api_msgs/msg/AirConditionStatus.msg)                           |
+| T.B.D.  | service | [/api/external/set/interior_light](./doc/api/external/set/interior_light.md)                                   | [tier4_external_api_msgs/srv/SetSwitch](https://github.com/tier4/tier4_autoware_msgs/blob/tier4/universe/tier4_external_api_msgs/srv/SetSwitch.srv)                                             |
+| T.B.D.  | topic   | [/api/external/get/interior_light](./doc/api/external/get/interior_light.md)                                   | [tier4_external_api_msgs/msg/SwitchStatus](https://github.com/tier4/tier4_autoware_msgs/blob/tier4/universe/tier4_external_api_msgs/msg/SwitchStatus.msg)                                       |
 
 ## Deprecated API
 
