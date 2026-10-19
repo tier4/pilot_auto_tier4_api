@@ -1,0 +1,10 @@
+<launch>
+  <node pkg="tier4_vehicle_device_simulator" exec="air_condition_node">
+    <remap from="~/air_condition/command" to="/vehicle/air_condition/command"/>
+    <remap from="~/air_condition/status" to="/vehicle/status/air_condition"/>
+  </node>
+  <node pkg="tier4_vehicle_device_simulator" exec="interior_light_node">
+    <remap from="~/interior_light/command" to="/vehicle/interior_light/command"/>
+    <remap from="~/interior_light/status" to="/vehicle/status/interior_light"/>
+  </node>
+</launch>
