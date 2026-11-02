@@ -41,6 +41,7 @@
       - /planning/planning_factors/intersection_occlusion
       - /planning/planning_factors/rear_collision_checker
       - /planning/planning_factors/diffusion_planner
+      - /planning/planning_factors/modifier_obstacle_stop
 
     behavior_name_remapping: |
       avoidance_by_lane_change: avoidance
@@ -57,6 +58,7 @@
       lane_change_left: lane_change
       lane_change_right: lane_change
       merge_from_private: merge
+      modifier_obstacle_stop: route_obstacle
       mvp_run_out: run_out
       obstacle_cruise: adaptive_cruise
       obstacle_cruise_planner: adaptive_cruise
