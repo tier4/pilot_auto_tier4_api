@@ -159,9 +159,9 @@ class Driving:
     def __init__(self, node: rclpy.node.Node):
         qos = rclpy.qos.QoSProfile(depth=1, durability=rclpy.qos.DurabilityPolicy.TRANSIENT_LOCAL)
         self.node = node
-        self.cli = node.create_client(EnableDriving, "/api/external/set/monitoring/driving/enable")
+        self.cli = node.create_client(EnableDriving, "/api/external/set/driving/enable")
         self.sub = node.create_subscription(
-            DrivingStatus, "/api/external/get/monitoring/driving/status", self.on_status, qos
+            DrivingStatus, "/api/external/get/driving/status", self.on_status, qos
         )
 
         self.button_stop = QtWidgets.QPushButton("Stop")

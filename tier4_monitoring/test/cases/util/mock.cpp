@@ -56,9 +56,9 @@ Client::ChangeFuture Client::change(uint8_t status)
 
 DrivingClient::DrivingClient(rclcpp::Node & node)
 {
-  cli_enable_ = node.create_client<EnableDriving>("/api/external/set/monitoring/driving/enable");
+  cli_enable_ = node.create_client<EnableDriving>("/api/external/set/driving/enable");
   sub_status_ = node.create_subscription<DrivingStatus>(
-    "/api/external/get/monitoring/driving/status", rclcpp::QoS(1).transient_local(),
+    "/api/external/get/driving/status", rclcpp::QoS(1).transient_local(),
     [this](const DrivingStatus & msg) { status_ = msg; });
 }
 
