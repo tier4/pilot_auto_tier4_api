@@ -11,6 +11,7 @@ ament_auto_add_library(${PROJECT_NAME} SHARED
   src/traffic_light.cpp
   src/planning_factor.cpp
   src/velocity_limit.cpp
+  src/hazard_alert.cpp
 )
 
 autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
@@ -53,6 +54,11 @@ autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
   EXECUTABLE velocity_limit_node
   ROS2_EXECUTOR SingleThreadedExecutor
   AGNOCAST_EXECUTOR AgnocastOnlyCallbackIsolatedExecutor
+)
+
+rclcpp_components_register_node(${PROJECT_NAME}
+  PLUGIN "tier4_autoware_api_extension::HazardAlert"
+  EXECUTABLE hazard_alert_node
 )
 
 ament_auto_package(INSTALL_TO_SHARE config launch)
