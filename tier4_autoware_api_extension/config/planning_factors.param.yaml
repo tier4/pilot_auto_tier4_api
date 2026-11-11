@@ -42,6 +42,7 @@
       - /planning/planning_factors/rear_collision_checker
       - /planning/planning_factors/diffusion_planner
       - /planning/planning_factors/modifier_obstacle_stop
+      - /planning/planning_factors/modifier_surround_obstacle_stop
       - /planning/planning_factors/modifier_traffic_light_stop
 
     behavior_name_remapping: |
@@ -60,6 +61,7 @@
       lane_change_right: lane_change
       merge_from_private: merge
       modifier_obstacle_stop: route_obstacle
+      modifier_surround_obstacle_stop: route_surround_obstacle
       modifier_traffic_light_stop: traffic_signal
       mvp_run_out: run_out
       obstacle_cruise: adaptive_cruise
