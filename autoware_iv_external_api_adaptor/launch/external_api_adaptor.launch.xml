@@ -1,0 +1,25 @@
+<launch>
+  <arg name="use_agnocast" default="$(env ENABLE_AGNOCAST 0)"/>
+  <group>
+    <push-ros-namespace namespace="external"/>
+    <node_container
+      pkg="rclcpp_components"
+      exec="component_container_mt"
+      name="autoware_iv_adaptor"
+      namespace=""
+      unless="$(equals $(var use_agnocast) 1)"
+      ros_args="--log-level external.autoware_iv_adaptor:=WARN"
+    />
+    <let name="container" value="$(var ros_namespace /)/autoware_iv_adaptor"/>
+    <log message="container: $(var container)"/>
+    <autoware_node pkg="autoware_iv_external_api_adaptor" exec="calibration_status_node" name="calibration_status" target="$(var container)"/>
+    <autoware_node pkg="autoware_iv_external_api_adaptor" exec="cpu_usage_node" name="cpu_usage" target="$(var container)"/>
+    <autoware_node pkg="autoware_iv_external_api_adaptor" exec="emergency_node" name="emergency" target="$(var container)"/>
+    <autoware_node pkg="autoware_iv_external_api_adaptor" exec="localization_score_node" name="localization_score" target="$(var container)"/>
+    <autoware_node pkg="autoware_iv_external_api_adaptor" exec="map_node" name="map" target="$(var container)"/>
+    <autoware_node pkg="autoware_iv_external_api_adaptor" exec="metadata_packages_node" name="metadata_packages" target="$(var container)"/>
+    <autoware_node pkg="autoware_iv_external_api_adaptor" exec="rosbag_logging_mode_node" name="rosbag_logging_mode" target="$(var container)"/>
+    <autoware_node pkg="autoware_iv_external_api_adaptor" exec="system_monitor_node" name="system_monitor" target="$(var container)"/>
+    <autoware_node pkg="autoware_iv_external_api_adaptor" exec="version_node" name="version" target="$(var container)"/>
+  </group>
+</launch>
