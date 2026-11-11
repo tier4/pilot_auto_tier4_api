@@ -54,10 +54,7 @@
   <!-- internal api adaptor -->
   <group>
     <push-ros-namespace namespace="autoware_api"/>
-    <include file="$(find-pkg-share autoware_iv_internal_api_adaptor)/launch/internal_api_relay.launch.xml" if="$(var launch_api_0_4_3)"/>
-    <include file="$(find-pkg-share autoware_iv_internal_api_adaptor)/launch/internal_api_adaptor.launch.py">
-      <arg name="launch_api_0_4_3" value="$(var launch_api_0_4_3)"/>
-    </include>
+    <include file="$(find-pkg-share autoware_iv_internal_api_adaptor)/launch/internal_api_adaptor.launch.xml"/>
   </group>
 
   <!-- tier4 autoware api extension -->
