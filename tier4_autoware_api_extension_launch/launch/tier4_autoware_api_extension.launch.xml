@@ -32,9 +32,7 @@
   <!-- external api adaptor -->
   <group>
     <push-ros-namespace namespace="autoware_api"/>
-    <include file="$(find-pkg-share autoware_iv_external_api_adaptor)/launch/external_api_adaptor.launch.py">
-      <arg name="launch_api_0_4_3" value="$(var launch_api_0_4_3)"/>
-    </include>
+    <include file="$(find-pkg-share autoware_iv_external_api_adaptor)/launch/external_api_adaptor.launch.xml"/>
   </group>
 
   <!-- external api adaptor (RTC controller) -->
