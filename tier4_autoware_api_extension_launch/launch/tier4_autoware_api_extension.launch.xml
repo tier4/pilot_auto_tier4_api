@@ -22,13 +22,6 @@
     </include>
   </group>
 
-  <!-- awapi -->
-  <group>
-    <include file="$(find-pkg-share awapi_awiv_adapter)/launch/awapi_awiv_adapter.launch.xml">
-      <arg name="launch_api_0_4_3" value="$(var launch_api_0_4_3)"/>
-    </include>
-  </group>
-
   <!-- external api adaptor -->
   <group>
     <push-ros-namespace namespace="autoware_api"/>
