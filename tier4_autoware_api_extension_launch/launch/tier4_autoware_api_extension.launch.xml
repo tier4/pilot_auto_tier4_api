@@ -52,9 +52,7 @@
 
   <!-- tier4 autoware api extension -->
   <group>
-    <include file="$(find-pkg-share tier4_autoware_api_extension)/launch/tier4_autoware_api_extension.launch.xml">
-      <arg name="launch_api_0_4_3" value="$(var launch_api_0_4_3)"/>
-    </include>
+    <include file="$(find-pkg-share tier4_autoware_api_extension)/launch/tier4_autoware_api_extension.launch.xml"/>
   </group>
 
   <!-- tier4 deprecated api adapter -->
