@@ -1,0 +1,19 @@
+<launch>
+  <arg name="use_agnocast" default="$(env ENABLE_AGNOCAST 0)"/>
+  <group>
+    <push-ros-namespace namespace="internal"/>
+    <let name="target" value="$(var ros_namespace)/autoware_iv_adaptor"/>
+    <let name="logger" value="$(eval '\'$(var target)\'.strip(\'/\').replace(\'/\', \'.\')')" />
+    <node_container
+      pkg="rclcpp_components"
+      exec="component_container_mt"
+      name="autoware_iv_adaptor"
+      namespace=""
+      unless="$(equals $(var use_agnocast) 1)"
+      ros_args="--log-level $(var logger):=WARN"
+    />
+    <autoware_node pkg="autoware_iv_internal_api_adaptor" exec="iv_msgs_node" name="iv_msgs" target="$(var target)">
+      <param name="launch_api_0_4_3" value="false"/>
+    </autoware_node>
+  </group>
+</launch>

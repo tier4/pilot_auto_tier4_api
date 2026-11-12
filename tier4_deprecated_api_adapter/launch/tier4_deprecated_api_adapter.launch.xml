@@ -1,29 +1,11 @@
 <launch>
-  <arg name="launch_api_0_4_3" default="false" description="Launch APIs with an EOL of v0.4.3."/>
-
   <group>
     <push-ros-namespace namespace="tier4_api"/>
-    <node_container pkg="rclcpp_components" exec="component_container_mt" name="deprecated_api_container" namespace="" ros_args="--log-level tier4_api.deprecated_api_container:=warn"/>
-    <include file="$(find-pkg-share tier4_deprecated_api_adapter)/launch/namespace.launch.py"/>
+    <let name="target" value="$(var ros_namespace)/deprecated_api_container"/>
+    <let name="logger" value="$(eval '\'$(var target)\'.strip(\'/\').replace(\'/\', \'.\')')"/>
+    <node_container pkg="rclcpp_components" exec="component_container_mt" name="deprecated_api_container" namespace="" ros_args="--log-level $(var logger):=WARN"/>
 
-    <load_composable_node target="$(var current_ros_namespace)/deprecated_api_container" if="$(var launch_api_0_4_3)">
-      <composable_node pkg="tier4_deprecated_api_adapter" plugin="tier4_deprecated_api_adapter::AutowareEngage" name="engage"/>
-      <composable_node pkg="tier4_deprecated_api_adapter" plugin="tier4_deprecated_api_adapter::ManualStatus" name="status" namespace="manual"/>
-      <composable_node pkg="tier4_deprecated_api_adapter" plugin="tier4_deprecated_api_adapter::ManualControl" name="local" namespace="manual">
-        <param name="mode" value="local"/>
-      </composable_node>
-      <composable_node pkg="tier4_deprecated_api_adapter" plugin="tier4_deprecated_api_adapter::ManualControl" name="remote" namespace="manual">
-        <param name="mode" value="remote"/>
-      </composable_node>
-    </load_composable_node>
-
-    <autoware_node
-      pkg="autoware_topic_relay_controller"
-      exec="autoware_topic_relay_controller_node"
-      name="relay_route_distance"
-      target="$(var current_ros_namespace)/deprecated_api_container"
-      output="screen"
-    >
+    <autoware_node pkg="autoware_topic_relay_controller" exec="autoware_topic_relay_controller_node" name="relay_route_distance" target="$(var target)" output="screen">
       <param name="topic" value="/tier4_api/utils/path_distance_calculator/distance"/>
       <param name="remap_topic" value="/autoware_api/utils/path_distance_calculator/distance"/>
       <param name="topic_type" value="autoware_internal_debug_msgs/msg/Float64Stamped"/>
@@ -31,13 +13,13 @@
       <param name="enable_keep_publishing" value="false"/>
     </autoware_node>
 
-    <!-- For the initial pose API, use the autoware_iv_external_api_adaptor before v0.4.4. -->
-    <load_composable_node target="$(var current_ros_namespace)/deprecated_api_container" unless="$(var launch_api_0_4_3)">
+    <!-- For the initial pose API. Some environments cannot handle bounded arrays. -->
+    <load_composable_node target="$(var target)">
       <composable_node pkg="tier4_deprecated_api_adapter" plugin="tier4_deprecated_api_adapter::InitialPose" name="initial_pose"/>
     </load_composable_node>
 
-    <!-- 2026/09 EOL API -->
-    <load_composable_node target="$(var current_ros_namespace)/deprecated_api_container">
+    <!-- For the hazard status API. Waiting for support for the cloud database. -->
+    <load_composable_node target="$(var target)">
       <composable_node pkg="tier4_deprecated_api_adapter" plugin="tier4_deprecated_api_adapter::HazardStatus" name="hazard_status"/>
     </load_composable_node>
   </group>

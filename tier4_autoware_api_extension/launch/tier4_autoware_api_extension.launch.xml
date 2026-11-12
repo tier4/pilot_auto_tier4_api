@@ -1,123 +1,48 @@
 <launch>
-  <arg name="launch_api_0_4_3" default="false" description="Launch APIs with an EOL of v0.4.3."/>
-
-  <let name="use_agnocast" value="$(env ENABLE_AGNOCAST 0)"/>
-  <!-- Set `ld_preload_value`. This env launch is needed regardless if we use agnocast or not -->
-  <include file="$(find-pkg-share autoware_agnocast_wrapper)/launch/agnocast_env.launch.py"/>
-
-  <!-- Component Container; with ENABLE_AGNOCAST=1 every node of this file runs as a process of its own -->
-  <group unless="$(var use_agnocast)">
-    <push-ros-namespace namespace="tier4_api"/>
-    <node_container pkg="rclcpp_components" exec="component_container_mt" name="api_extension_container" namespace="" ros_args="--log-level tier4_api.api_extension_container:=warn"/>
-  </group>
-
-  <!-- Nodes in this package. -->
-  <group unless="$(var use_agnocast)">
-    <push-ros-namespace namespace="tier4_api"/>
-    <include file="$(find-pkg-share tier4_autoware_api_extension)/launch/namespace.launch.py"/>
-    <load_composable_node target="$(var current_ros_namespace)/api_extension_container">
-      <composable_node pkg="tier4_autoware_api_extension" plugin="tier4_autoware_api_extension::AirCondition" name="air_condition"/>
-      <composable_node pkg="tier4_autoware_api_extension" plugin="tier4_autoware_api_extension::InteriorLight" name="interior_light"/>
-      <composable_node pkg="tier4_autoware_api_extension" plugin="tier4_autoware_api_extension::RouteDistance" name="route_distance"/>
-      <composable_node pkg="tier4_autoware_api_extension" plugin="tier4_autoware_api_extension::TrafficLight" name="traffic_light"/>
-      <composable_node pkg="tier4_autoware_api_extension" plugin="tier4_autoware_api_extension::PlanningFactor" name="planning_factor">
-        <param from="$(find-pkg-share tier4_autoware_api_extension)/config/planning_factors.param.yaml"/>
-      </composable_node>
-    </load_composable_node>
-  </group>
-
-  <!-- LD_PRELOAD goes on the node processes alone: the heaphook has to be in place before the node
-       allocates, and preloading it into the launch process would register a second Agnocast
-       process. -->
-  <group if="$(var use_agnocast)">
-    <push-ros-namespace namespace="tier4_api"/>
-    <node pkg="tier4_autoware_api_extension" exec="air_condition_node" name="air_condition" output="screen">
-      <env name="LD_PRELOAD" value="$(var ld_preload_value)"/>
-    </node>
-    <node pkg="tier4_autoware_api_extension" exec="interior_light_node" name="interior_light" output="screen">
-      <env name="LD_PRELOAD" value="$(var ld_preload_value)"/>
-    </node>
-    <node pkg="tier4_autoware_api_extension" exec="route_distance_node" name="route_distance" output="screen">
-      <env name="LD_PRELOAD" value="$(var ld_preload_value)"/>
-    </node>
-    <node pkg="tier4_autoware_api_extension" exec="traffic_light_node" name="traffic_light" output="screen">
-      <env name="LD_PRELOAD" value="$(var ld_preload_value)"/>
-    </node>
-    <node pkg="tier4_autoware_api_extension" exec="planning_factor_node" name="planning_factor" output="screen">
-      <param from="$(find-pkg-share tier4_autoware_api_extension)/config/planning_factors.param.yaml"/>
-      <env name="LD_PRELOAD" value="$(var ld_preload_value)"/>
-    </node>
-  </group>
-
-  <!-- For the velocity limit API, switch the implementation from v0.4.4. -->
-  <group unless="$(var launch_api_0_4_3)">
-    <group unless="$(var use_agnocast)">
-      <push-ros-namespace namespace="tier4_api"/>
-      <include file="$(find-pkg-share tier4_autoware_api_extension)/launch/namespace.launch.py"/>
-      <load_composable_node target="$(var current_ros_namespace)/api_extension_container">
-        <composable_node pkg="tier4_autoware_api_extension" plugin="tier4_autoware_api_extension::VelocityLimit" name="velocity_limit"/>
-      </load_composable_node>
-    </group>
-    <group if="$(var use_agnocast)">
-      <push-ros-namespace namespace="tier4_api"/>
-      <node pkg="tier4_autoware_api_extension" exec="velocity_limit_node" name="velocity_limit" output="screen">
-        <env name="LD_PRELOAD" value="$(var ld_preload_value)"/>
-      </node>
-    </group>
-  </group>
-
-  <!-- Relay for tier4_v2x_msgs. -->
+  <arg name="use_agnocast" default="$(env ENABLE_AGNOCAST 0)"/>
   <group>
     <push-ros-namespace namespace="tier4_api"/>
-    <include file="$(find-pkg-share tier4_autoware_api_extension)/launch/namespace.launch.py"/>
-    <autoware_node
-      pkg="autoware_topic_relay_controller"
-      exec="autoware_topic_relay_controller_node"
-      name="relay_virtual_traffic_light_status"
-      target="$(var current_ros_namespace)/api_extension_container"
-      output="screen"
-    >
+    <let name="target" value="$(var ros_namespace)/api_extension_container"/>
+    <let name="logger" value="$(eval '\'$(var target)\'.strip(\'/\').replace(\'/\', \'.\')')"/>
+    <node_container
+      pkg="rclcpp_components"
+      exec="component_container_mt"
+      name="api_extension_container"
+      namespace=""
+      unless="$(equals $(var use_agnocast) 1)"
+      ros_args="--log-level $(var logger):=WARN"
+    />
+
+    <autoware_node pkg="tier4_autoware_api_extension" exec="air_condition_node" name="air_condition" target="$(var target)"/>
+    <autoware_node pkg="tier4_autoware_api_extension" exec="interior_light_node" name="interior_light" target="$(var target)"/>
+    <autoware_node pkg="tier4_autoware_api_extension" exec="route_distance_node" name="route_distance" target="$(var target)"/>
+    <autoware_node pkg="tier4_autoware_api_extension" exec="traffic_light_node" name="traffic_light" target="$(var target)"/>
+    <autoware_node pkg="tier4_autoware_api_extension" exec="velocity_limit_node" name="velocity_limit" target="$(var target)"/>
+
+    <autoware_node pkg="tier4_autoware_api_extension" exec="planning_factor_node" name="planning_factor" target="$(var target)">
+      <param from="$(find-pkg-share tier4_autoware_api_extension)/config/planning_factors.param.yaml"/>
+    </autoware_node>
+
+    <autoware_node pkg="autoware_path_distance_calculator" exec="autoware_path_distance_calculator_node" name="path_distance_calculator" namespace="utils" target="$(var target)" output="screen">
+      <remap from="~/input/route" to="/planning/mission_planning/route"/>
+      <remap from="~/input/map" to="/map/vector_map"/>
+      <remap from="~/output/distance" to="~/distance"/>
+    </autoware_node>
+
+    <autoware_node pkg="autoware_topic_relay_controller" exec="autoware_topic_relay_controller_node" name="relay_virtual_traffic_light_status" target="$(var target)" output="screen">
       <param name="topic" value="/api/external/set/virtual_traffic_light/states"/>
       <param name="remap_topic" value="/perception/virtual_traffic_light_states"/>
       <param name="topic_type" value="tier4_v2x_msgs/msg/VirtualTrafficLightStateArray"/>
       <param name="enable_relay_control" value="false"/>
       <param name="enable_keep_publishing" value="false"/>
     </autoware_node>
-    <autoware_node
-      pkg="autoware_topic_relay_controller"
-      exec="autoware_topic_relay_controller_node"
-      name="relay_virtual_traffic_light_commands"
-      target="$(var current_ros_namespace)/api_extension_container"
-      output="screen"
-    >
+
+    <autoware_node pkg="autoware_topic_relay_controller" exec="autoware_topic_relay_controller_node" name="relay_virtual_traffic_light_commands" target="$(var target)" output="screen">
       <param name="topic" value="/planning/scenario_planning/status/infrastructure_commands"/>
       <param name="remap_topic" value="/api/external/get/virtual_traffic_light/commands"/>
       <param name="topic_type" value="tier4_v2x_msgs/msg/InfrastructureCommandArray"/>
       <param name="enable_relay_control" value="false"/>
       <param name="enable_keep_publishing" value="false"/>
     </autoware_node>
-  </group>
-
-  <!-- For route distance. -->
-  <group unless="$(var use_agnocast)">
-    <push-ros-namespace namespace="tier4_api"/>
-    <include file="$(find-pkg-share tier4_autoware_api_extension)/launch/namespace.launch.py"/>
-    <load_composable_node target="$(var current_ros_namespace)/api_extension_container">
-      <composable_node pkg="autoware_path_distance_calculator" plugin="autoware::path_distance_calculator::PathDistanceCalculator" name="path_distance_calculator" namespace="utils">
-        <remap from="~/input/route" to="/planning/mission_planning/route"/>
-        <remap from="~/input/map" to="/map/vector_map"/>
-        <remap from="~/output/distance" to="~/distance"/>
-      </composable_node>
-    </load_composable_node>
-  </group>
-
-  <group if="$(var use_agnocast)">
-    <push-ros-namespace namespace="tier4_api"/>
-    <node pkg="autoware_path_distance_calculator" exec="autoware_path_distance_calculator_node" name="path_distance_calculator" namespace="utils" output="screen">
-      <remap from="~/input/route" to="/planning/mission_planning/route"/>
-      <remap from="~/input/map" to="/map/vector_map"/>
-      <remap from="~/output/distance" to="~/distance"/>
-      <env name="LD_PRELOAD" value="$(var ld_preload_value)"/>
-    </node>
   </group>
 </launch>
