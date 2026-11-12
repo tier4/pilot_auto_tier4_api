@@ -1,0 +1,5 @@
+# Python
+*.pyc
+
+#prettier
+node_modules/
