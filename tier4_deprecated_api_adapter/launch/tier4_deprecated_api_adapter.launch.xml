@@ -1,7 +1,7 @@
 <launch>
   <group>
     <push-ros-namespace namespace="tier4_api"/>
-    <let name="target" value="$(var ros_namespace)/autoware_iv_adaptor"/>
+    <let name="target" value="$(var ros_namespace)/deprecated_api_container"/>
     <let name="logger" value="$(eval '\'$(var target)\'.strip(\'/\').replace(\'/\', \'.\')')"/>
     <node_container pkg="rclcpp_components" exec="component_container_mt" name="deprecated_api_container" namespace="" ros_args="--log-level $(var logger):=WARN"/>
 
