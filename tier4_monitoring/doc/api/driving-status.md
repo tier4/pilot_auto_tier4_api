@@ -1,4 +1,4 @@
-# /api/external/get/monitoring/driving/status
+# /api/external/get/driving/status
 
 ## Classification
 

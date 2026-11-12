@@ -30,9 +30,9 @@ Driving::Driving(autoware::agnocast_wrapper::Node & node)
     node.create_client<ChangeOperationMode>("/api/operation_mode/change_to_autonomous");
 
   pub_status_ = node.create_publisher<DrivingStatus>(
-    "/api/external/get/monitoring/driving/status", rclcpp::QoS(1).transient_local());
+    "/api/external/get/driving/status", rclcpp::QoS(1).transient_local());
   srv_enable_ = node.create_service<EnableDriving>(
-    "/api/external/set/monitoring/driving/enable",
+    "/api/external/set/driving/enable",
     std::bind(&Driving::on_enable, this, std::placeholders::_1, std::placeholders::_2));
 
   pub_velocity_limit_set_ = node.create_publisher<VelocityLimitSet>(
