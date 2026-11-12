@@ -1,7 +1,4 @@
 <launch>
-  <!-- For API EOL information, see https://github.com/tier4/tier4_ad_api_adaptor -->
-  <arg name="launch_api_0_4_3" default="false" description="Launch APIs with an EOL of v0.4.3."/>
-
   <arg name="failure_notification_error_file" default="$(find-pkg-share tier4_failure_notification)/examples/code.yaml"/>
 
   <let name="use_agnocast" value="$(env ENABLE_AGNOCAST 0)"/>
@@ -57,9 +54,7 @@
 
   <!-- tier4 deprecated api adapter -->
   <group>
-    <include file="$(find-pkg-share tier4_deprecated_api_adapter)/launch/tier4_deprecated_api_adapter.launch.xml">
-      <arg name="launch_api_0_4_3" value="$(var launch_api_0_4_3)"/>
-    </include>
+    <include file="$(find-pkg-share tier4_deprecated_api_adapter)/launch/tier4_deprecated_api_adapter.launch.xml"/>
   </group>
 
   <!-- failure notification -->
