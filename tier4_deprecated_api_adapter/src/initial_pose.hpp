@@ -15,6 +15,7 @@
 #ifndef INITIAL_POSE_HPP_
 #define INITIAL_POSE_HPP_
 
+#include <autoware/agnocast_wrapper/node.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 #include <autoware_adapi_v1_msgs/srv/initialize_localization.hpp>
@@ -25,7 +26,7 @@
 namespace tier4_deprecated_api_adapter
 {
 
-class InitialPose : public rclcpp::Node
+class InitialPose : public autoware::agnocast_wrapper::Node
 {
 public:
   explicit InitialPose(const rclcpp::NodeOptions & options);
@@ -34,12 +35,13 @@ private:
   using NewService = autoware_adapi_v1_msgs::srv::InitializeLocalization;
   using OldService = tier4_external_api_msgs::srv::InitializePose;
 
-  rclcpp::TimerBase::SharedPtr timer_;
-  rclcpp::Service<OldService>::SharedPtr srv_;
-  rclcpp::Client<NewService>::SharedPtr cli_;
+  rclcpp::CallbackGroup::SharedPtr group_cli_;
+  AUTOWARE_SERVICE_PTR(OldService) srv_;
+  AUTOWARE_CLIENT_PTR(NewService) cli_;
 
   void on_service(
-    const std::shared_ptr<rmw_request_id_t> header, const OldService::Request::SharedPtr request);
+    AUTOWARE_SERVER_REQUEST_PTR(OldService) request,
+    AUTOWARE_SERVER_RESPONSE_PTR(OldService) response);
 };
 
 }  // namespace tier4_deprecated_api_adapter

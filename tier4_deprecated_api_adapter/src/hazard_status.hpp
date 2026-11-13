@@ -15,6 +15,7 @@
 #ifndef HAZARD_STATUS_HPP_
 #define HAZARD_STATUS_HPP_
 
+#include <autoware/agnocast_wrapper/node.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 #include <autoware_system_msgs/msg/hazard_status_stamped.hpp>
@@ -23,7 +24,7 @@
 namespace tier4_deprecated_api_adapter
 {
 
-class HazardStatus : public rclcpp::Node
+class HazardStatus : public autoware::agnocast_wrapper::Node
 {
 public:
   explicit HazardStatus(const rclcpp::NodeOptions & options);
@@ -31,8 +32,8 @@ public:
 private:
   using ExternalMessage = tier4_external_api_msgs::msg::HazardStatusStamped;
   using InternalMessage = autoware_system_msgs::msg::HazardStatusStamped;
-  rclcpp::Publisher<ExternalMessage>::SharedPtr pub_;
-  rclcpp::Subscription<InternalMessage>::SharedPtr sub_;
+  AUTOWARE_PUBLISHER_PTR(ExternalMessage) pub_;
+  AUTOWARE_SUBSCRIPTION_PTR(InternalMessage) sub_;
 };
 
 }  // namespace tier4_deprecated_api_adapter

@@ -23,17 +23,18 @@ namespace tier4_deprecated_api_adapter
 
 HazardStatus::HazardStatus(const rclcpp::NodeOptions & options) : Node("hazard_status", options)
 {
-  const auto on_message = [this](const InternalMessage & internal) {
-    ExternalMessage external;
-    external.stamp = internal.stamp;
-    external.status.level = internal.status.level;
-    external.status.emergency = internal.status.emergency;
-    external.status.emergency_holding = internal.status.emergency_holding;
-    external.status.diag_no_fault = internal.status.diag_no_fault;
-    external.status.diag_safe_fault = internal.status.diag_safe_fault;
-    external.status.diag_latent_fault = internal.status.diag_latent_fault;
-    external.status.diag_single_point_fault = internal.status.diag_single_point_fault;
-    pub_->publish(external);
+  const auto on_message = [this](const AUTOWARE_MESSAGE_CONST_SHARED_PTR(InternalMessage) & msg) {
+    const auto & internal = *msg;
+    auto external = ALLOCATE_OUTPUT_MESSAGE_UNIQUE(pub_);
+    external->stamp = internal.stamp;
+    external->status.level = internal.status.level;
+    external->status.emergency = internal.status.emergency;
+    external->status.emergency_holding = internal.status.emergency_holding;
+    external->status.diag_no_fault = internal.status.diag_no_fault;
+    external->status.diag_safe_fault = internal.status.diag_safe_fault;
+    external->status.diag_latent_fault = internal.status.diag_latent_fault;
+    external->status.diag_single_point_fault = internal.status.diag_single_point_fault;
+    pub_->publish(std::move(external));
   };
   pub_ = create_publisher<ExternalMessage>("/api/external/get/hazard_status", 1);
   sub_ = create_subscription<InternalMessage>("/system/emergency/hazard_status", 1, on_message);
