@@ -40,6 +40,7 @@ If the version is `v0.4.0-`, it means version v0.4.0 or earlier.
 | T.B.D.  | topic   | [/api/external/get/air_condition](./doc/api/external/get/air_condition.md)                                     | tier4_external_api_msgs/msg/AirConditionStatus                                                                                                                                                  |
 | T.B.D.  | service | [/api/external/set/interior_light](./doc/api/external/set/interior_light.md)                                   | tier4_external_api_msgs/srv/SetSwitch                                                                                                                                                           |
 | T.B.D.  | topic   | [/api/external/get/interior_light](./doc/api/external/get/interior_light.md)                                   | tier4_external_api_msgs/msg/SwitchStatus                                                                                                                                                        |
+| T.B.D.  | topic   | [/api/external/get/hazard_alert](./doc/api/external/get/hazard_alert.md)                                       | tier4_external_api_msgs/msg/HazardAlert                                                                                                                                                         |
 
 ## Deprecated API
 

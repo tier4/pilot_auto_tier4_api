@@ -16,6 +16,7 @@
       <composable_node pkg="tier4_autoware_api_extension" plugin="tier4_autoware_api_extension::InteriorLight" name="interior_light"/>
       <composable_node pkg="tier4_autoware_api_extension" plugin="tier4_autoware_api_extension::RouteDistance" name="route_distance"/>
       <composable_node pkg="tier4_autoware_api_extension" plugin="tier4_autoware_api_extension::TrafficLight" name="traffic_light"/>
+      <composable_node pkg="tier4_autoware_api_extension" plugin="tier4_autoware_api_extension::HazardAlert" name="hazard_alert"/>
       <composable_node pkg="tier4_autoware_api_extension" plugin="tier4_autoware_api_extension::PlanningFactor" name="planning_factor">
         <param from="$(find-pkg-share tier4_autoware_api_extension)/config/planning_factors.param.yaml"/>
       </composable_node>
