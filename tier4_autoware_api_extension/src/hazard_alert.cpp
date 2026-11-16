@@ -14,6 +14,8 @@
 
 #include "hazard_alert.hpp"
 
+#include <utility>
+
 namespace tier4_autoware_api_extension
 {
 
@@ -38,13 +40,13 @@ HazardAlert::HazardAlert(const rclcpp::NodeOptions & options) : Node("hazard_ale
 
 void HazardAlert::on_message(const InternalMessage & internal)
 {
-  ExternalMessage external;
-  external.header = internal.header;
-  external.origin = internal.origin;
+  auto external = ALLOCATE_OUTPUT_MESSAGE_UNIQUE(pub_hazard_alert_);
+  external->header = internal.header;
+  external->origin = internal.origin;
   for (const auto & sector : internal.sectors) {
-    external.sectors.push_back(convert(sector));
+    external->sectors.push_back(convert(sector));
   }
-  pub_hazard_alert_->publish(external);
+  pub_hazard_alert_->publish(std::move(external));
 }
 
 }  // namespace tier4_autoware_api_extension

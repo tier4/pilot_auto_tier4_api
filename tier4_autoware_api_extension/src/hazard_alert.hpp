@@ -15,6 +15,7 @@
 #ifndef HAZARD_ALERT_HPP_
 #define HAZARD_ALERT_HPP_
 
+#include <autoware/agnocast_wrapper/node.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 #include <autoware_internal_control_msgs/msg/hazard_alert.hpp>
@@ -26,15 +27,15 @@ namespace tier4_autoware_api_extension
 using ExternalMessage = tier4_external_api_msgs::msg::HazardAlert;
 using InternalMessage = autoware_internal_control_msgs::msg::HazardAlert;
 
-class HazardAlert : public rclcpp::Node
+class HazardAlert : public autoware::agnocast_wrapper::Node
 {
 public:
   explicit HazardAlert(const rclcpp::NodeOptions & options);
 
 private:
   void on_message(const InternalMessage & internal);
-  rclcpp::Subscription<InternalMessage>::SharedPtr sub_hazard_alert_;
-  rclcpp::Publisher<ExternalMessage>::SharedPtr pub_hazard_alert_;
+  AUTOWARE_SUBSCRIPTION_PTR(InternalMessage) sub_hazard_alert_;
+  AUTOWARE_PUBLISHER_PTR(ExternalMessage) pub_hazard_alert_;
 };
 
 }  // namespace tier4_autoware_api_extension
