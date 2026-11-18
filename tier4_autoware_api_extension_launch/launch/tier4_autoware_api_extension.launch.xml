@@ -1,7 +1,4 @@
 <launch>
-  <!-- For API EOL information, see https://github.com/tier4/tier4_ad_api_adaptor -->
-  <arg name="launch_api_0_4_3" default="false" description="Launch APIs with an EOL of v0.4.3."/>
-
   <arg name="failure_notification_error_file" default="$(find-pkg-share tier4_failure_notification)/examples/code.yaml"/>
 
   <let name="use_agnocast" value="$(env ENABLE_AGNOCAST 0)"/>
@@ -22,19 +19,10 @@
     </include>
   </group>
 
-  <!-- awapi -->
-  <group>
-    <include file="$(find-pkg-share awapi_awiv_adapter)/launch/awapi_awiv_adapter.launch.xml">
-      <arg name="launch_api_0_4_3" value="$(var launch_api_0_4_3)"/>
-    </include>
-  </group>
-
   <!-- external api adaptor -->
   <group>
     <push-ros-namespace namespace="autoware_api"/>
-    <include file="$(find-pkg-share autoware_iv_external_api_adaptor)/launch/external_api_adaptor.launch.py">
-      <arg name="launch_api_0_4_3" value="$(var launch_api_0_4_3)"/>
-    </include>
+    <include file="$(find-pkg-share autoware_iv_external_api_adaptor)/launch/external_api_adaptor.launch.xml"/>
   </group>
 
   <!-- external api adaptor (RTC controller) -->
@@ -56,24 +44,17 @@
   <!-- internal api adaptor -->
   <group>
     <push-ros-namespace namespace="autoware_api"/>
-    <include file="$(find-pkg-share autoware_iv_internal_api_adaptor)/launch/internal_api_relay.launch.xml" if="$(var launch_api_0_4_3)"/>
-    <include file="$(find-pkg-share autoware_iv_internal_api_adaptor)/launch/internal_api_adaptor.launch.py">
-      <arg name="launch_api_0_4_3" value="$(var launch_api_0_4_3)"/>
-    </include>
+    <include file="$(find-pkg-share autoware_iv_internal_api_adaptor)/launch/internal_api_adaptor.launch.xml"/>
   </group>
 
   <!-- tier4 autoware api extension -->
   <group>
-    <include file="$(find-pkg-share tier4_autoware_api_extension)/launch/tier4_autoware_api_extension.launch.xml">
-      <arg name="launch_api_0_4_3" value="$(var launch_api_0_4_3)"/>
-    </include>
+    <include file="$(find-pkg-share tier4_autoware_api_extension)/launch/tier4_autoware_api_extension.launch.xml"/>
   </group>
 
   <!-- tier4 deprecated api adapter -->
   <group>
-    <include file="$(find-pkg-share tier4_deprecated_api_adapter)/launch/tier4_deprecated_api_adapter.launch.xml">
-      <arg name="launch_api_0_4_3" value="$(var launch_api_0_4_3)"/>
-    </include>
+    <include file="$(find-pkg-share tier4_deprecated_api_adapter)/launch/tier4_deprecated_api_adapter.launch.xml"/>
   </group>
 
   <!-- failure notification -->
