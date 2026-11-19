@@ -65,6 +65,10 @@ private:
   AUTOWARE_PUBLISHER_PTR(VelocityLimitSet) pub_velocity_limit_set_;
   AUTOWARE_PUBLISHER_PTR(VelocityLimitClear) pub_velocity_limit_clear_;
 
+  // For compatibility.
+  AUTOWARE_PUBLISHER_PTR(DrivingStatus) pub_status_old_;
+  AUTOWARE_SERVICE_PTR(EnableDriving) srv_enable_old_;
+
   void on_operation_mode(const OperationModeState & msg);
   void on_enable(
     const EnableDriving::Request::SharedPtr req, const EnableDriving::Response::SharedPtr res);
