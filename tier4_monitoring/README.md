@@ -13,15 +13,15 @@
 - [地図フォーマットについてはこちらを参考にしてください。](https://docs.pilot.auto/reference-design/common/map-requirements/vector-map-requirements/category_others/#vm-07-09-%E8%87%AA%E5%8B%95%E9%81%8B%E8%BB%A2%E3%83%AC%E3%83%99%E3%83%AB-2%E3%83%AC%E3%83%99%E3%83%AB-4-%E3%81%AE%E5%88%87%E3%82%8A%E6%9B%BF%E3%81%88)
 - 上記タグが埋め込まれる Lanelet は想定されるルートの最初のセグメントか、それに隣接する road_shoulder であること。
 - 上記タグの値は想定されるルートの最後のセグメントか、それに隣接する road_shoulder であること。
-- 上記タグの値に複数の候補がある場合は、カンマ区切りで指定し、スペースなどの他の起動は含めないこと。
+- 上記タグの値に複数の候補がある場合は、カンマ区切りで指定し、スペースなどの他の記号は含めないこと。
 
 以下のインターフェースを置き換えて使用すること。置き換え前のインターフェースは直接使用しないでください。
 
-| 置き換え前                               | 置き換え後                                  |
-| ---------------------------------------- | ------------------------------------------- |
-| /api/operation_mode/state                | /api/external/get/monitoring/driving/status |
-| /api/operation_mode/change_to_stop       | /api/external/set/monitoring/driving/enable |
-| /api/operation_mode/change_to_autonomous | /api/external/set/monitoring/driving/enable |
+| 置き換え前                               | 置き換え後                       |
+| ---------------------------------------- | -------------------------------- |
+| /api/operation_mode/state                | /api/external/get/driving/status |
+| /api/operation_mode/change_to_stop       | /api/external/set/driving/enable |
+| /api/operation_mode/change_to_autonomous | /api/external/set/driving/enable |
 
 ## パラメーター
 
@@ -52,10 +52,10 @@
 
 以下のインターフェースは車両の走行状態の管理のために作成されます。
 
-| インターフェース                                                           | 型                                        |
-| -------------------------------------------------------------------------- | ----------------------------------------- |
-| [/api/external/get/monitoring/driving/status](./doc/api/driving-status.md) | tier4_external_api_msgs/msg/DrivingStatus |
-| [/api/external/set/monitoring/driving/enable](./doc/api/driving-enable.md) | tier4_external_api_msgs/srv/EnableDriving |
+| インターフェース                                                | 型                                        |
+| --------------------------------------------------------------- | ----------------------------------------- |
+| [/api/external/get/driving/status](./doc/api/driving-status.md) | tier4_external_api_msgs/msg/DrivingStatus |
+| [/api/external/set/driving/enable](./doc/api/driving-enable.md) | tier4_external_api_msgs/srv/EnableDriving |
 
 ### 依存インターフェース
 

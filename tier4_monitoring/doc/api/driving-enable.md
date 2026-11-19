@@ -1,4 +1,4 @@
-# /api/external/set/monitoring/driving/enable
+# /api/external/set/driving/enable
 
 ## Classification
 
