@@ -35,6 +35,13 @@ Driving::Driving(autoware::agnocast_wrapper::Node & node)
     "/api/external/set/driving/enable",
     std::bind(&Driving::on_enable, this, std::placeholders::_1, std::placeholders::_2));
 
+  // For compatibility.
+  pub_status_old_ = node.create_publisher<DrivingStatus>(
+    "/api/external/get/monitoring/driving/status", rclcpp::QoS(1).transient_local());
+  srv_enable_old_ = node.create_service<EnableDriving>(
+    "/api/external/set/monitoring/driving/enable",
+    std::bind(&Driving::on_enable, this, std::placeholders::_1, std::placeholders::_2));
+
   pub_velocity_limit_set_ = node.create_publisher<VelocityLimitSet>(
     "/planning/scenario_planning/max_velocity_candidates", rclcpp::QoS{1}.transient_local());
   pub_velocity_limit_clear_ = node.create_publisher<VelocityLimitClear>(
@@ -139,6 +146,7 @@ void Driving::publish(const rclcpp::Time & now)
     prev_status_ = msg;  // Save the message before setting the stamp.
     msg.stamp = now;
     pub_status_->publish(msg);
+    pub_status_old_->publish(msg);
   }
 }
 
