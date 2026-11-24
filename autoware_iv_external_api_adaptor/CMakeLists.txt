@@ -7,39 +7,14 @@ autoware_package()
 ament_auto_add_library(${PROJECT_NAME} SHARED
   src/calibration_status.cpp
   src/cpu_usage.cpp
-  src/diagnostics.cpp
-  src/door.cpp
   src/emergency.cpp
-  src/engage.cpp
-  src/fail_safe_state.cpp
-  src/initial_pose.cpp
   src/localization_score.cpp
   src/map.cpp
   src/metadata_packages.cpp
-  src/operator.cpp
   src/rosbag_logging_mode.cpp
-  src/route.cpp
   src/rtc_controller.cpp
-  src/service.cpp
-  src/start.cpp
   src/system_monitor.cpp
-  src/vehicle_status.cpp
-  src/velocity.cpp
   src/version.cpp
-)
-
-rclcpp_components_register_nodes(${PROJECT_NAME}
-  "external_api::Diagnostics"
-  "external_api::Door"
-  "external_api::Engage"
-  "external_api::FailSafeState"
-  "external_api::InitialPose"
-  "external_api::Operator"
-  "external_api::Route"
-  "external_api::Service"
-  "external_api::Start"
-  "external_api::VehicleStatus"
-  "external_api::Velocity"
 )
 
 autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
@@ -50,9 +25,23 @@ autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
 )
 
 autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
+  PLUGIN "external_api::CpuUsage"
+  EXECUTABLE cpu_usage_node
+  ROS2_EXECUTOR SingleThreadedExecutor
+  AGNOCAST_EXECUTOR AgnocastOnlyCallbackIsolatedExecutor
+)
+
+autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
   PLUGIN "external_api::Emergency"
   EXECUTABLE emergency_node
   ROS2_EXECUTOR MultiThreadedExecutor
+  AGNOCAST_EXECUTOR AgnocastOnlyCallbackIsolatedExecutor
+)
+
+autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
+  PLUGIN "external_api::LocalizationScore"
+  EXECUTABLE localization_score_node
+  ROS2_EXECUTOR SingleThreadedExecutor
   AGNOCAST_EXECUTOR AgnocastOnlyCallbackIsolatedExecutor
 )
 
@@ -85,29 +74,15 @@ autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
 )
 
 autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
-  PLUGIN "external_api::Version"
-  EXECUTABLE version_node
-  ROS2_EXECUTOR SingleThreadedExecutor
-  AGNOCAST_EXECUTOR AgnocastOnlyCallbackIsolatedExecutor
-)
-
-autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
-  PLUGIN "external_api::CpuUsage"
-  EXECUTABLE cpu_usage_node
-  ROS2_EXECUTOR SingleThreadedExecutor
-  AGNOCAST_EXECUTOR AgnocastOnlyCallbackIsolatedExecutor
-)
-
-autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
-  PLUGIN "external_api::LocalizationScore"
-  EXECUTABLE localization_score_node
-  ROS2_EXECUTOR SingleThreadedExecutor
-  AGNOCAST_EXECUTOR AgnocastOnlyCallbackIsolatedExecutor
-)
-
-autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
   PLUGIN "external_api::SystemMonitor"
   EXECUTABLE system_monitor_node
+  ROS2_EXECUTOR SingleThreadedExecutor
+  AGNOCAST_EXECUTOR AgnocastOnlyCallbackIsolatedExecutor
+)
+
+autoware_agnocast_wrapper_register_node(${PROJECT_NAME}
+  PLUGIN "external_api::Version"
+  EXECUTABLE version_node
   ROS2_EXECUTOR SingleThreadedExecutor
   AGNOCAST_EXECUTOR AgnocastOnlyCallbackIsolatedExecutor
 )
