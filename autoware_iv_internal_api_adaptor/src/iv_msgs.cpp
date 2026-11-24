@@ -22,15 +22,6 @@ IVMsgs::IVMsgs(const rclcpp::NodeOptions & options) : Node("external_api_iv_msgs
 {
   using std::placeholders::_1;
 
-  if (declare_parameter<bool>("launch_api_0_4_3")) {
-    pub_state_ =
-      create_publisher<AutowareStateOutput>("/api/iv_msgs/autoware/state", rclcpp::QoS(1));
-    sub_state_ = create_subscription<AutowareStateInput>(
-      "/autoware/state", rclcpp::QoS(1), std::bind(&IVMsgs::onState, this, _1));
-    sub_emergency_ = create_subscription<EmergencyStateInput>(
-      "/system/fail_safe/mrm_state", rclcpp::QoS(1), std::bind(&IVMsgs::onEmergency, this, _1));
-  }
-
   pub_trajectory_ = create_publisher<TrajectoryOutput>(
     "/api/iv_msgs/planning/scenario_planning/trajectory", rclcpp::QoS(1));
   sub_trajectory_ = create_subscription<TrajectoryInput>(
@@ -41,22 +32,6 @@ IVMsgs::IVMsgs(const rclcpp::NodeOptions & options) : Node("external_api_iv_msgs
   sub_tracked_objects_ = create_subscription<TrackedObjectsInput>(
     "/perception/object_recognition/tracking/objects", rclcpp::QoS(1),
     std::bind(&IVMsgs::onTrackedObjects, this, _1));
-
-  is_emergency_ = false;
-}
-
-void IVMsgs::onState(const AutowareStateInput::ConstSharedPtr message)
-{
-  auto state = tier4_auto_msgs_converter::convert(*message);
-  if (is_emergency_) {
-    state.state = AutowareStateOutput::EMERGENCY;
-  }
-  pub_state_->publish(state);
-}
-
-void IVMsgs::onEmergency(const EmergencyStateInput::ConstSharedPtr message)
-{
-  is_emergency_ = message->state != EmergencyStateInput::NORMAL;
 }
 
 void IVMsgs::onTrajectory(const TrajectoryInput::ConstSharedPtr message)
