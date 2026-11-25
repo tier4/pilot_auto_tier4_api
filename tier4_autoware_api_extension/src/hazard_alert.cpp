@@ -30,7 +30,7 @@ auto convert(const autoware_internal_control_msgs::msg::HazardSector & internal)
 HazardAlert::HazardAlert(const rclcpp::NodeOptions & options) : Node("hazard_alert", options)
 {
   sub_hazard_alert_ = create_subscription<InternalMessage>(
-    "/control/control_validator/output/hazard_alert", 1,
+    "/control/predicted_trajectory_validator/output/hazard_alert", 1,
     std::bind(&HazardAlert::on_message, this, std::placeholders::_1));
 
   pub_hazard_alert_ = create_publisher<ExternalMessage>("/api/external/get/hazard_alert", 1);
